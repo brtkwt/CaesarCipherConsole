@@ -5,88 +5,51 @@ class Program
 	public static char[] pol_alphabet = { ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'Ą', 'B', 'C', 'Ć', 'D', 'E', 'Ę', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'Ł', 'M', 'N', 'Ń', 'O', 'Ó', 'P', 'Q', 'R', 'S', 'Ś', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ź', 'Ż',
 		'[', '\\', ']', '^', '_', '`', 'a', 'ą', 'b', 'c', 'ć', 'd', 'e', 'ę', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'ł', 'm', 'n', 'ń', 'o', 'ó', 'p', 'q', 'r', 's', 'ś', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ź', 'ż',
-		'{', '|', '}', '~' };
-
-	public static int GetRandomShift()
-	{
-		Random random = new Random();
-		int randomShift = random.Next(1, pol_alphabet.Length - 1);
-
-		return randomShift;
-	}
+		'{', '|', '}', '~' };   // array length - 113
 
 	public static string Encryption(int shift, string secretText)
 	{
-		string finishedProduct = "";
+		string encodedText = TextTransformation(shift, secretText);
 
-		for (int i = 0; i < secretText.Length; i++)
-		{
-
-			for (int j = 0; j < pol_alphabet.Length; j++)
-			{
-				if (pol_alphabet[j] == secretText[i])
-				{
-					if(j + shift < pol_alphabet.Length)
-					{
-						finishedProduct += pol_alphabet[j + shift];
-					}
-					else
-					{
-						finishedProduct += pol_alphabet[j + shift - pol_alphabet.Length];
-					}
-				}
-			}
-		}
-
-		return AddHiddenShift(shift, finishedProduct);
-	}
-
-	public static string AddHiddenShift(int shift, string plainTextWithNoShift)
-	{
 		// shift is always hidden as the one before last character
-		return plainTextWithNoShift.Insert(plainTextWithNoShift.Length - 1, pol_alphabet[shift - 1].ToString());
+		return encodedText.Insert(encodedText.Length - 1, pol_alphabet[shift - 1].ToString());
 	}
 
 	public static string Decryption(string plainText)
 	{
-		int shift = ReadTheShiftFromPlainText(plainText);
+		int shift = (-1) * (Array.IndexOf(pol_alphabet, plainText[^2]) + 1);
 
-		string plainTextNoShift = plainText.Substring(0, plainText.Length - 2) + plainText.Substring(plainText.Length - 1);
+		string plainTextNoShift = plainText.Remove(plainText.Length - 2, 1);
 
-		string decryptedText = "";
+		return TextTransformation(shift, plainTextNoShift);
+	}
 
-		for (int i = 0; i < plainTextNoShift.Length; i++)
+	public static string TextTransformation(int shift, string text)
+	{
+		string finishedProduct = "";
+
+		foreach(char letter in text)
 		{
-			for (int j = 0; j < pol_alphabet.Length; j++)
-			{
-				if (pol_alphabet[j] == plainTextNoShift[i])
-				{
-					if (j - shift >= 0)
-					{
-						decryptedText += pol_alphabet[j - shift];
-					}
-					else
-					{
-						decryptedText += pol_alphabet[j - shift + pol_alphabet.Length];
-					}
-				}
-			}
+			int position = Array.IndexOf(pol_alphabet, letter) + shift;
+
+			if (position < 0)
+				finishedProduct += pol_alphabet[position + pol_alphabet.Length];
+
+			else if (position > 112)
+				finishedProduct += pol_alphabet[position - pol_alphabet.Length];
+			
+			else
+				finishedProduct += pol_alphabet[position];
 		}
 
-		return decryptedText;
-	}
-
-	public static int ReadTheShiftFromPlainText(string plainText)
-	{
-		char character = plainText[^2];
-		return Array.IndexOf(pol_alphabet, character) + 1;
-	}
+		return finishedProduct;
+    }
 
 	public static void WrongInputBlock(string reason = "")
 	{
 		Console.WriteLine($"Wrong Input - {reason}!!!");
-		Console.WriteLine("Press any key to continue ...");
-		Console.ReadKey();
+		Console.WriteLine("Press enter to continue ...");
+		while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
 	} 
 
 	public static void TextOutputBlock(string result, string vertion = "")
@@ -95,8 +58,8 @@ class Program
 		Console.WriteLine($"Your {vertion} text is :");
 		Console.WriteLine($"{result}███");
 		Console.WriteLine();
-		Console.WriteLine("Press any key to continue ...");
-		Console.ReadKey();
+		Console.WriteLine("Press enter to continue ...");
+		while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
 	}
 
 	private static void Main(string[] args)
@@ -104,9 +67,7 @@ class Program
 		Console.OutputEncoding = Encoding.Unicode;
 		Console.InputEncoding = Encoding.Unicode;
 		
-		bool flag = true;
-
-        while (flag)
+        while (true)
         {
 			Console.Clear();
 			Console.WriteLine("---------------------------------------------------");
@@ -115,8 +76,7 @@ class Program
             Console.WriteLine("Select action: 1.Encryption / 2.Decryption / 3.Exit ");
 			Console.WriteLine("---------------------------------------------------");
 
-			int choice;
-			bool success = int.TryParse(Console.ReadLine(), out choice);
+			bool success = int.TryParse(Console.ReadLine(), out int choice);
 
 			Console.WriteLine();
 
@@ -126,7 +86,7 @@ class Program
 				continue;
 			}
 
-            if (choice == 1)
+			if (choice == 1)
 			{
 				Console.WriteLine("Enter the secret text :");
 				string secretText = Console.ReadLine();
@@ -139,13 +99,12 @@ class Program
 
 				Console.WriteLine();
 				Console.WriteLine("1.Enther Shift Manually / 2.Get random Shift");
-				int choice2;
-				bool success2 = int.TryParse(Console.ReadLine(), out choice2);
+				bool success2 = int.TryParse(Console.ReadLine(), out int choice2);
 
 				if (!success2)
 				{
-                    Console.WriteLine();
-                    WrongInputBlock("Enter a number");
+					Console.WriteLine();
+					WrongInputBlock("Enter a number");
 					continue;
 				}
 
@@ -163,17 +122,18 @@ class Program
 						WrongInputBlock("Shift must be a number");
 						continue;
 					}
-					
-					if(shift <  1 || shift > 112)
+
+					if (shift < 1 || shift > 112)
 					{
-                        Console.WriteLine();
-                        WrongInputBlock("Shift must be in 1 - 112 range");
+						Console.WriteLine();
+						WrongInputBlock("Shift must be in 1 - 112 range");
 						continue;
 					}
 				}
 				else if (choice2 == 2)
 				{
-					shift = GetRandomShift();
+					Random random = new Random();
+					shift = random.Next(1, pol_alphabet.Length - 1);
 					Console.WriteLine($"Your Shift is {shift}");
 				}
 				else
@@ -199,10 +159,7 @@ class Program
 				TextOutputBlock(Decryption(plainText), "Decrypted");
 			}
 			else if (choice == 3)
-			{
-				flag = false;
-				continue;
-			}
+				break;
 			else
 			{
 				WrongInputBlock("Incorrect number");
