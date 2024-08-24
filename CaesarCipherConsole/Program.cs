@@ -18,15 +18,13 @@ class Program
 	public static string Encryption(int shift, string secretText)
 	{
 		string finishedProduct = "";
-		char letter;
 
 		for (int i = 0; i < secretText.Length; i++)
 		{
-			letter = secretText[i];
 
 			for (int j = 0; j < pol_alphabet.Length; j++)
 			{
-				if (pol_alphabet[j] == letter)
+				if (pol_alphabet[j] == secretText[i])
 				{
 					if(j + shift < pol_alphabet.Length)
 					{
@@ -57,14 +55,56 @@ class Program
 		return plainText;
 	}
 
-	public static string Decryption(string PlainText)
+	public static string Decryption(string plainText)
 	{
-		return "";
+		int shift = ReadTheShiftFromPlainText(plainText);
+
+		string plainTextNoShift = plainText.Substring(0, plainText.Length - 2) + plainText.Substring(plainText.Length - 1);
+
+		string decryptedText = "";
+
+		for (int i = 0; i < plainTextNoShift.Length; i++)
+		{
+			for (int j = 0; j < pol_alphabet.Length; j++)
+			{
+				if (pol_alphabet[j] == plainTextNoShift[i])
+				{
+					if (j - shift >= 0)
+					{
+						decryptedText += pol_alphabet[j - shift];
+					}
+					else
+					{
+						decryptedText += pol_alphabet[j - shift + pol_alphabet.Length];
+					}
+				}
+			}
+		}
+
+		return decryptedText;
+	}
+
+	public static int ReadTheShiftFromPlainText(string plainText)
+	{
+		char character = plainText[plainText.Length - 2];
+		int shift = 0;
+
+		for (int i = 0; i < pol_alphabet.Length; i++)
+		{
+			if(pol_alphabet[i] == character)
+			{
+				shift = i + 1;
+			}
+		}
+
+		return shift;
 	}
 
 	private static void Main(string[] args)
 	{
-		Console.OutputEncoding = Encoding.UTF8;
+		Console.OutputEncoding = Encoding.Unicode;
+		Console.InputEncoding = Encoding.Unicode;
+		
 		bool flag = true;
 
         Console.WriteLine("CaesarCipherConsole");
@@ -110,7 +150,7 @@ class Program
 				Console.Clear();
 				Console.WriteLine("Your Encoded text is :");
 				char endOfLineSign = (char)219;
-				Console.WriteLine($"{result}██████");
+				Console.WriteLine($"{result}███");
 				Console.WriteLine();
 				Console.WriteLine("Press any key to continue");
 
@@ -121,16 +161,19 @@ class Program
 			else if (choice == 2)
 			{
 				Console.WriteLine("Enter the plain text :");
-				string plainText = Console.ReadLine();
+				string decryptedText = Console.ReadLine();
 
+				Console.WriteLine($"{Decryption(decryptedText)}███");
 
+				Console.ReadKey();
+				Console.Clear();
 			}
 			else if (choice == 3)
 			{
-				flag = false;
-				continue;
+				//flag = false;
+				//continue;
 				// break;
-				// Environment.Exit(0);
+				Environment.Exit(0);
 			}
 			else
 			{
@@ -141,6 +184,5 @@ class Program
 			}
 		}
 
-		Console.WriteLine("Hello, World!");
 	}
 }
