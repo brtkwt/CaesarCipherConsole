@@ -10,7 +10,7 @@ class Program
 	public static int GetRandomShift()
 	{
 		Random random = new Random();
-		int randomShift = random.Next(1, pol_alphabet.Length);
+		int randomShift = random.Next(1, pol_alphabet.Length - 1);
 
 		return randomShift;
 	}
@@ -44,15 +44,7 @@ class Program
 	public static string AddHiddenShift(int shift, string plainTextWithNoShift)
 	{
 		// shift is always hidden as the one before last character
-		int position = plainTextWithNoShift.Length - 1;
-
-		char lastLetter = plainTextWithNoShift[position];
-		string plainText = plainTextWithNoShift.Substring(0, position);
-
-		plainText += pol_alphabet[shift - 1];
-		plainText += lastLetter;
-
-		return plainText;
+		return plainTextWithNoShift.Insert(plainTextWithNoShift.Length - 1, pol_alphabet[shift - 1].ToString());
 	}
 
 	public static string Decryption(string plainText)
@@ -86,18 +78,25 @@ class Program
 
 	public static int ReadTheShiftFromPlainText(string plainText)
 	{
-		char character = plainText[plainText.Length - 2];
-		int shift = 0;
+		char character = plainText[^2];
+		return Array.IndexOf(pol_alphabet, character) + 1;
+	}
 
-		for (int i = 0; i < pol_alphabet.Length; i++)
-		{
-			if(pol_alphabet[i] == character)
-			{
-				shift = i + 1;
-			}
-		}
+	public static void WrongInputBlock(string reason = "")
+	{
+		Console.WriteLine($"Wrong Input - {reason}!!!");
+		Console.WriteLine("Press any key to continue ...");
+		Console.ReadKey();
+	} 
 
-		return shift;
+	public static void TextOutputBlock(string result, string vertion = "")
+	{
+		Console.WriteLine();
+		Console.WriteLine($"Your {vertion} text is :");
+		Console.WriteLine($"{result}███");
+		Console.WriteLine();
+		Console.WriteLine("Press any key to continue ...");
+		Console.ReadKey();
 	}
 
 	private static void Main(string[] args)
@@ -107,82 +106,108 @@ class Program
 		
 		bool flag = true;
 
-        Console.WriteLine("CaesarCipherConsole");
-		Thread.Sleep(1000);
-		Console.Clear();
-
-		while (flag)
+        while (flag)
         {
-			Console.WriteLine("Actions: 1.Encryption / 2.Decryption / 3.Exit ");
-
-			int choice = Convert.ToInt32(Console.ReadLine());
 			Console.Clear();
+			Console.WriteLine("---------------------------------------------------");
+			Console.WriteLine("             Caesar Cipher Console");
+            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine("Select action: 1.Encryption / 2.Decryption / 3.Exit ");
+			Console.WriteLine("---------------------------------------------------");
 
-			if (choice == 1)
+			int choice;
+			bool success = int.TryParse(Console.ReadLine(), out choice);
+
+			Console.WriteLine();
+
+			if (!success)
+			{
+				WrongInputBlock("Enter a number");
+				continue;
+			}
+
+            if (choice == 1)
 			{
 				Console.WriteLine("Enter the secret text :");
 				string secretText = Console.ReadLine();
 
-                Console.WriteLine("1.Enther Shift Manualy / 2.Get random Shift");
-				int choice2 = Convert.ToInt32(Console.ReadLine());
+				if (string.IsNullOrEmpty(secretText))
+				{
+					WrongInputBlock("Empty");
+					continue;
+				}
+
+				Console.WriteLine();
+				Console.WriteLine("1.Enther Shift Manually / 2.Get random Shift");
+				int choice2;
+				bool success2 = int.TryParse(Console.ReadLine(), out choice2);
+
+				if (!success2)
+				{
+                    Console.WriteLine();
+                    WrongInputBlock("Enter a number");
+					continue;
+				}
+
 				int shift;
+				Console.WriteLine();
 
 				if (choice2 == 1)
 				{
-					Console.WriteLine("Enter the Shift :");
-					shift = Convert.ToInt32(Console.ReadLine());
+					Console.WriteLine("Enter the Shift (number 1 - 112):");
+					bool success3 = int.TryParse(Console.ReadLine(), out shift);
+
+					if (!success3)
+					{
+						Console.WriteLine();
+						WrongInputBlock("Shift must be a number");
+						continue;
+					}
+					
+					if(shift <  1 || shift > 112)
+					{
+                        Console.WriteLine();
+                        WrongInputBlock("Shift must be in 1 - 112 range");
+						continue;
+					}
 				}
 				else if (choice2 == 2)
 				{
 					shift = GetRandomShift();
 					Console.WriteLine($"Your Shift is {shift}");
-
-					Console.ReadKey();
 				}
 				else
 				{
-					break;
+					WrongInputBlock("Wrong number selected");
+					continue;
 				}
 
-                
-
-                string result = Encryption( shift, secretText);
-				Console.Clear();
-				Console.WriteLine("Your Encoded text is :");
-				char endOfLineSign = (char)219;
-				Console.WriteLine($"{result}███");
-				Console.WriteLine();
-				Console.WriteLine("Press any key to continue");
-
-				Console.ReadKey();
-				Console.Clear();
-
+				TextOutputBlock(Encryption(shift, secretText), "Encrypted");
 			}
 			else if (choice == 2)
 			{
 				Console.WriteLine("Enter the plain text :");
-				string decryptedText = Console.ReadLine();
+				string plainText = Console.ReadLine();
 
-				Console.WriteLine($"{Decryption(decryptedText)}███");
+				if (string.IsNullOrEmpty(plainText) || plainText.Length == 1)
+				{
+					Console.WriteLine();
+					WrongInputBlock("Empty or to short (minimum length for decryption is 2 characters)");
+					continue;
+				}
 
-				Console.ReadKey();
-				Console.Clear();
+				TextOutputBlock(Decryption(plainText), "Decrypted");
 			}
 			else if (choice == 3)
 			{
-				//flag = false;
-				//continue;
-				// break;
-				Environment.Exit(0);
+				flag = false;
+				continue;
 			}
 			else
 			{
-                Console.WriteLine("Wrong Input !!!");
-				Thread.Sleep(3000);
-				Console.Clear();
+				WrongInputBlock("Incorrect number");
 				continue;
 			}
 		}
-
 	}
 }
