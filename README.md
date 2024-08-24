@@ -6,7 +6,9 @@ It works just as Caesar Cipher with one exception. The shift parameter is encode
 This app is a replica of the original version created in 2018, which was unfortunately lost due to a hard drive failure. It was my first hobby project, initially written in C++ and later adapted to C and C#.
 
 <h2>Encryption</h2>
+
 ![1](https://github.com/user-attachments/assets/286f5317-d4a6-4a70-9f6d-fd1577a11ba3)
 
 <h2>Decryption</h2>
+
 ![2](https://github.com/user-attachments/assets/1b122d42-7c15-4c05-bb7e-2e742aba7569)
