@@ -7,8 +7,8 @@ This app is a replica of the original version created in 2018, which was unfortu
 
 <h2>Encryption</h2>
 
-![1](https://github.com/user-attachments/assets/286f5317-d4a6-4a70-9f6d-fd1577a11ba3)
+![2](https://github.com/user-attachments/assets/1b122d42-7c15-4c05-bb7e-2e742aba7569)
 
 <h2>Decryption</h2>
 
-![2](https://github.com/user-attachments/assets/1b122d42-7c15-4c05-bb7e-2e742aba7569)
+![1](https://github.com/user-attachments/assets/286f5317-d4a6-4a70-9f6d-fd1577a11ba3)
