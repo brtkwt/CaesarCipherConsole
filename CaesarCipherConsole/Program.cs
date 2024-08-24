@@ -82,14 +82,14 @@ class Program
 
 			if (!success)
 			{
-				WrongInputBlock("Enter a number");
+				WrongInputBlock("Enter a integer number");
 				continue;
 			}
 
 			if (choice == 1)
 			{
 				Console.WriteLine("Enter the secret text :");
-				string secretText = Console.ReadLine();
+				string? secretText = Console.ReadLine();
 
 				if (string.IsNullOrEmpty(secretText))
 				{
@@ -104,7 +104,7 @@ class Program
 				if (!success2)
 				{
 					Console.WriteLine();
-					WrongInputBlock("Enter a number");
+					WrongInputBlock("Enter a integer number");
 					continue;
 				}
 
@@ -119,7 +119,7 @@ class Program
 					if (!success3)
 					{
 						Console.WriteLine();
-						WrongInputBlock("Shift must be a number");
+						WrongInputBlock("Shift must be a integer number");
 						continue;
 					}
 
@@ -147,7 +147,7 @@ class Program
 			else if (choice == 2)
 			{
 				Console.WriteLine("Enter the plain text :");
-				string plainText = Console.ReadLine();
+				string? plainText = Console.ReadLine();
 
 				if (string.IsNullOrEmpty(plainText) || plainText.Length == 1)
 				{
