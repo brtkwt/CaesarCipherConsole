@@ -1,6 +1,6 @@
 <h1>CaesarCipherConsole</h1>
 
-This simple console application is designed for encoding passwords stored on paper. The cipher isn't complex, it is used just as a precaution to prevent from nosy siblings.
+This simple console application is designed for encoding passwords stored on paper. The cipher isn't complex, it is used just as a precaution for nosy siblings.
 It works just as Caesar Cipher with one exception. The shift parameter is encoded as a character and stored at a set location within the plain text. As a result, it doesn't have to be remembered separately. The password can also be decrypted without the app.
 
 The location pattern of the encoded shift character can be easily modified to be less obvious and more difficult to decrypt.
