@@ -5,7 +5,7 @@ It works just as Caesar Cipher with one exception. The shift parameter is encode
 
 The location pattern of the encoded shift character can be easily modified to be less obvious and more difficult to decrypt.
 
-This app is a replica of the original version created in 2018, which was unfortunately lost due to a hard drive failure. It was my first hobby project, initially written in C++ and later adapted to C and C#.
+This app is an updated replica of the original version created in 2018, which was unfortunately lost due to a hard drive failure. It was my first hobby project when I just started coding, initially written in C++ and later adapted to C and C#.
 
 <h2>Encryption</h2>
 
